@@ -4,6 +4,26 @@ class ProductController{
     //cria um produto
     async store(req, res){
 
+        const { title, description, price} = req.body
+
+        if(!title){
+            return res.status(400).json({message: 'Titulo não existe'})
+        }
+
+        if(!description){
+            return res.status(400).json({message: 'Descrição não existe'})
+        }
+
+        if(!price){
+            return res.status(400).json({message: 'Preço não existe'})
+        }
+
+        const productAlreadyExists = await ProductModel.findOnde({title: title})
+
+        if(productAlreadyExists){
+            return res.status(400).json({message: 'Produto já cadastrado'})
+        }
+
         const createdProduct = await ProductModel.create(req.body)
 
         return res.status(200).json(createdProduct)
